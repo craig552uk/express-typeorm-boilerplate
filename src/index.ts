@@ -1,10 +1,27 @@
 import "reflect-metadata";
-import { Request, Response } from "express";
-import { app } from "./lib/app";
+import { ConnectionOptions } from "typeorm";
+import { createConnectedApp } from "./lib/app";
+import { Product } from "./entity/Product";
 
-app.get("/", (req: Request, res: Response) => {
-    let name = req.query.name || "World";
-    res.jsonp({ msg: `Hello ${name}!` });
-});
+// TODO Get from CLI
+const HOST = "127.0.0.1";
+const PORT = 1337;
 
-app.listen(1337, () => console.log("Listening on http://localhost:1337"));
+// Database connection options
+// TODO move to configuration loader library
+let options: ConnectionOptions = {
+    driver: {
+        type: "sqlite",
+        storage: "database.sqlite"
+    },
+    entities: [
+        Product
+    ],
+    autoSchemaSync: true
+};
+
+createConnectedApp(options).then(app => {
+    app.listen(PORT, HOST, () => {
+        console.log(`Serving on http://${HOST}:${PORT}`);
+    });
+})
