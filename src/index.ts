@@ -15,7 +15,7 @@ let options: ConnectionOptions = {
         storage: "database.sqlite"
     },
     entities: [
-        Product
+        __dirname + "/entity/*.js"
     ],
     autoSchemaSync: true
 };
