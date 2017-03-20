@@ -6,11 +6,9 @@ function getRepository(){
 }
 
 export async function getAll(): Promise<{}[]> {
-    const repository = getRepository();
-    return await repository.find();
+    return await getRepository().find();
 }
 
 export async function getById(id: Number): Promise<{}[]> {
-    const repository = getRepository();
-    return await repository.find(id);
+    return await getRepository().find(id);
 }
