@@ -3,7 +3,7 @@ import * as bodyParser from "body-parser";
 import { HttpError, NotFound, InternalServerError } from "http-errors";
 import { Express, Request, Response, NextFunction } from "express";
 import { createConnection, ConnectionOptions } from "typeorm";
-import * as routes from "../route" ;
+import * as routes from "../route";
 
 /**
  * Returns an Express Application with an active database connection
