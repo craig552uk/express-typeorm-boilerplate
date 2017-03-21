@@ -3,7 +3,9 @@ import * as bodyParser from "body-parser";
 import { HttpError, NotFound, InternalServerError } from "http-errors";
 import { Express, Request, Response, NextFunction } from "express";
 import { createConnection, ConnectionOptions } from "typeorm";
-import { ProductController } from "../controller/product";
+
+// Import Routes
+import * as productRouter from "../route/productRouter" ;
 
 /**
  * Returns an Express Application with an active database connection
@@ -13,40 +15,12 @@ export function createConnectedApp(options?: ConnectionOptions): Promise<Express
     return createConnection(options)
         .then(async connection => {
 
-            // Controllers //
-            const products = ProductController.getInstance();
-
             // Express Application
             const app = express();
             app.use(bodyParser.json());
 
-            // TODO Apply routes from module
-
-            // Product CRUD endpoints
-            app.get("/products", (req: Request, res: Response, next: NextFunction) => {
-                products.getAll()
-                    .then(data => res.jsonp({ data: data })).catch(next);
-            });
-
-            app.post("/products", (req: Request, res: Response, next: NextFunction) => {
-                products.add(req.body)
-                    .then(data => res.jsonp({ data: data })).catch(next);
-            });
-
-            app.get("/products/:id", (req: Request, res: Response, next: NextFunction) => {
-                products.getById(req.params.id)
-                    .then(data => res.jsonp({ data: data })).catch(next);
-            });
-
-            app.post("/products/:id", (req: Request, res: Response, next: NextFunction) => {
-                products.updateById(req.params.id, req.body)
-                    .then(data => res.jsonp({ data: data })).catch(next);
-            });
-
-            app.delete("/products/:id", (req: Request, res: Response, next: NextFunction) => {
-                products.deleteById(req.params.id)
-                    .then(data => res.jsonp({ data: data })).catch(next);
-            });
+            // Apply routes from modules
+            app.use(productRouter(connection));
 
             // 404 Not Found
             app.use((req: Request, res: Response, next: NextFunction) => {
