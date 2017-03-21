@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
-import { Request, Response, Express } from "express";
+import { HttpError, NotFound, InternalServerError } from "http-errors";
+import { Express, Request, Response, NextFunction } from "express";
 import { createConnection, ConnectionOptions } from "typeorm";
 import { ProductController } from "../controller/product";
 
@@ -20,14 +21,49 @@ export function createConnectedApp(options?: ConnectionOptions): Promise<Express
             app.use(bodyParser.json());
 
             // TODO Apply routes from module
-            app.get("/", (req: Request, res: Response) => {
-                res.jsonp({ msg: "Hello World" });
+
+            // Product CRUD endpoints
+            app.get("/products", (req: Request, res: Response, next: NextFunction) => {
+                products.getAll()
+                    .then(data => res.jsonp({ data: data })).catch(next);
             });
 
-            app.get("/products", async (req: Request, res: Response) => {
-                const data = await products.getAll();
-                res.jsonp({ products: data });
-            })
+            app.post("/products", (req: Request, res: Response, next: NextFunction) => {
+                products.add(req.body)
+                    .then(data => res.jsonp({ data: data })).catch(next);
+            });
+
+            app.get("/products/:id", (req: Request, res: Response, next: NextFunction) => {
+                products.getById(req.params.id)
+                    .then(data => res.jsonp({ data: data })).catch(next);
+            });
+
+            app.post("/products/:id", (req: Request, res: Response, next: NextFunction) => {
+                products.updateById(req.params.id, req.body)
+                    .then(data => res.jsonp({ data: data })).catch(next);
+            });
+
+            app.delete("/products/:id", (req: Request, res: Response, next: NextFunction) => {
+                products.deleteById(req.params.id)
+                    .then(data => res.jsonp({ data: data })).catch(next);
+            });
+
+            // 404 Not Found
+            app.use((req: Request, res: Response, next: NextFunction) => {
+                throw new NotFound();
+            });
+
+            // 500 Server Error
+            app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+                if (err instanceof HttpError) {
+                    res.status(err.statusCode);
+                    res.jsonp({ err: err });
+                } else {
+                    console.error(err);
+                    res.status(500);
+                    res.jsonp({ err: new InternalServerError() });
+                }
+            });
 
             return app;
         })
