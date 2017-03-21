@@ -1,14 +1,25 @@
 import { getEntityManager } from "typeorm";
 import { Product } from "../entity/Product";
 
-function getRepository(){
-    return getEntityManager().getRepository(Product);
-}
+export class ProductController {
 
-export async function getAll(): Promise<{}[]> {
-    return await getRepository().find();
-}
+    private static _instance: ProductController;
+    private static _entityManager;
 
-export async function getById(id: Number): Promise<{}[]> {
-    return await getRepository().find(id);
+    constructor() {
+        if (ProductController._instance) throw Error("Cannot be reinstantiated");
+        ProductController._entityManager = getEntityManager().getRepository(Product);
+    }
+
+    public static getInstance(): ProductController {
+        return this._instance || (this._instance = new ProductController());
+    }
+
+    public async getAll(): Promise<Product[]> {
+        return await ProductController._entityManager.find();
+    }
+
+    public async getById(id: number): Promise<Product> {
+        return await ProductController._entityManager.findOneById(id);
+    }
 }

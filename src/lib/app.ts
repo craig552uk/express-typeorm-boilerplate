@@ -2,7 +2,7 @@ import * as express from "express";
 import * as bodyParser from "body-parser";
 import { Request, Response, Express } from "express";
 import { createConnection, ConnectionOptions } from "typeorm";
-import * as product from "../controller/product";
+import { ProductController } from "../controller/product";
 
 /**
  * Returns an Express Application with an active database connection
@@ -12,6 +12,10 @@ export function createConnectedApp(options?: ConnectionOptions): Promise<Express
     return createConnection(options)
         .then(async connection => {
 
+            // Controllers //
+            const products = ProductController.getInstance();
+
+            // Express Application
             const app = express();
             app.use(bodyParser.json());
 
@@ -21,8 +25,8 @@ export function createConnectedApp(options?: ConnectionOptions): Promise<Express
             });
 
             app.get("/products", async (req: Request, res: Response) => {
-                const products = await product.getAll();
-                res.jsonp({ products: products });
+                const data = await products.getAll();
+                res.jsonp({ products: data });
             })
 
             return app;
