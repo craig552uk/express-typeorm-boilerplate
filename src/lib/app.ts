@@ -13,7 +13,7 @@ import * as products from "../route/products" ;
 export function createConnectedApp(options?: ConnectionOptions): Promise<Express> {
 
     return createConnection(options)
-        .then(async connection => {
+        .then(connection => {
 
             // Express Application
             const app = express();
