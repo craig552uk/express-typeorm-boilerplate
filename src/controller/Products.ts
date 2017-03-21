@@ -10,23 +10,23 @@ export class Products {
         throw Error("Cannot be intantiated");
     }
 
-    public static getEntityManager(): Repository<Product> {
+    private static db(): Repository<Product> {
         return this._entityManager || (this._entityManager = getEntityManager().getRepository(Product));
     }
 
     public static async getAll(): Promise<Product[]> {
-        return await this.getEntityManager().find();
+        return await this.db().find();
     }
 
     public static async add(fields: { name: string }): Promise<Product> {
         // TODO Validation
         let item = new Product();
         item.name = fields.name;
-        return await this.getEntityManager().persist(item);
+        return await this.db().persist(item);
     }
 
     public static async getById(id: number): Promise<Product> {
-        let item = await this.getEntityManager().findOneById(id);
+        let item = await this.db().findOneById(id);
         if (!item) throw new NotFound();
         return item;
     }
@@ -35,12 +35,12 @@ export class Products {
         // TODO Validation
         let item = await this.getById(id);
         item.name = fields.name;
-        return await this.getEntityManager().persist(item);
+        return await this.db().persist(item);
     }
 
     public static async deleteById(id: number): Promise<number> {
         let item = await this.getById(id);
-        await this.getEntityManager().remove(item);
+        await this.db().remove(item);
         return id;
     }
 }
