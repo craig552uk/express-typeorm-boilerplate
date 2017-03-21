@@ -5,7 +5,7 @@ import { Express, Request, Response, NextFunction } from "express";
 import { createConnection, ConnectionOptions } from "typeorm";
 
 // Import Routes
-import * as productRouter from "../route/productRouter" ;
+import * as products from "../route/products" ;
 
 /**
  * Returns an Express Application with an active database connection
@@ -20,7 +20,7 @@ export function createConnectedApp(options?: ConnectionOptions): Promise<Express
             app.use(bodyParser.json());
 
             // Apply routes from modules
-            app.use(productRouter(connection));
+            app.use(products);
 
             // 404 Not Found
             app.use((req: Request, res: Response, next: NextFunction) => {
