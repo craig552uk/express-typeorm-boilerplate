@@ -29,11 +29,11 @@ export function createConnectedApp(options?: ConnectionOptions): Promise<Express
             app.use((err: any, req: Request, res: Response, next: NextFunction) => {
                 if (err instanceof HttpError) {
                     res.status(err.statusCode);
-                    res.jsonp({ err: err });
+                    res.jsonp({ error: err });
                 } else {
                     console.error(err);
                     res.status(500);
-                    res.jsonp({ err: new InternalServerError() });
+                    res.jsonp({ error: new InternalServerError() });
                 }
             });
 
