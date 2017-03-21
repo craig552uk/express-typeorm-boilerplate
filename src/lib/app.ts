@@ -3,9 +3,7 @@ import * as bodyParser from "body-parser";
 import { HttpError, NotFound, InternalServerError } from "http-errors";
 import { Express, Request, Response, NextFunction } from "express";
 import { createConnection, ConnectionOptions } from "typeorm";
-
-// Import Routes
-import * as products from "../route/products" ;
+import * as routes from "../route" ;
 
 /**
  * Returns an Express Application with an active database connection
@@ -20,7 +18,7 @@ export function createConnectedApp(options?: ConnectionOptions): Promise<Express
             app.use(bodyParser.json());
 
             // Apply routes from modules
-            app.use(products);
+            app.use(routes);
 
             // 404 Not Found
             app.use((req: Request, res: Response, next: NextFunction) => {
