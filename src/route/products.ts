@@ -1,4 +1,3 @@
-import { Connection } from "typeorm";
 import { Router, Request, Response, NextFunction } from "express";
 import { Products } from "../controller/Products";
 
