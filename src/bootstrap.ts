@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { ConnectionOptions } from "typeorm";
-import { createConnectedApp } from "./lib/app";
+import { Application } from "./lib/application";
 import { SuperTest, Test } from "supertest";
 import * as supertest from "supertest";
 
@@ -20,5 +20,5 @@ let options: ConnectionOptions = {
  * for use in unit tests
  */
 export function getTestApp(): Promise<SuperTest<Test>> {
-    return createConnectedApp(options).then(app => supertest(app));
+    return Application.getApp(options).then(app => supertest(app));
 }

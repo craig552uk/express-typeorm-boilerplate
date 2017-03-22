@@ -1,7 +1,6 @@
 import "reflect-metadata";
 import { ConnectionOptions } from "typeorm";
-import { createConnectedApp } from "./lib/app";
-import { Product } from "./entity/Product";
+import { Application } from "./lib/application";
 
 // TODO Get from CLI
 const HOST = "127.0.0.1";
@@ -20,7 +19,7 @@ let options: ConnectionOptions = {
     autoSchemaSync: true
 };
 
-createConnectedApp(options).then(app => {
+Application.getApp(options).then(app => {
     app.listen(PORT, HOST, () => {
         console.log(`Serving on http://${HOST}:${PORT}`);
     });

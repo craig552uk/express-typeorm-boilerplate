@@ -2,9 +2,8 @@ import "mocha";
 import { SuperTest, Test } from "supertest";
 import { getTestApp } from "../bootstrap";
 
-let app: SuperTest<Test>;
-
 describe("GET /products", () => {
+    let app: SuperTest<Test>;
 
     before(done => {
         getTestApp().then(a => { app = a; done(); });
