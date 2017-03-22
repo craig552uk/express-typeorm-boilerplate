@@ -30,19 +30,26 @@ export class Application {
 
                 // 404 Not Found
                 this._app.use((req: Request, res: Response, next: NextFunction) => {
-                    throw new NotFound();
+                    if (!res.headersSent) throw new NotFound();
+                    next();
                 });
 
                 // 500 Server Error
                 this._app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-                    if (err instanceof HttpError) {
+                    if (!res.headersSent) {
+                        if (!(err instanceof HttpError)) {
+                            console.error(err);
+                            err = new InternalServerError();
+                        }
                         res.status(err.statusCode);
                         res.jsonp({ error: err });
-                    } else {
-                        console.error(err);
-                        res.status(500);
-                        res.jsonp({ error: new InternalServerError() });
                     }
+                    next();
+                });
+
+                // Logger Middleware
+                this._app.use((req: Request, res: Response) => {
+                    console.log(res.statusCode, req.method, req.url);
                 });
 
                 return this._app;
