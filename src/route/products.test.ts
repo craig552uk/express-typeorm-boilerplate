@@ -1,37 +1,17 @@
-import "reflect-metadata";
-import { ConnectionOptions } from "typeorm";
-import { createConnectedApp } from "../lib/app";
-import * as supertest from "supertest";
 import "mocha";
+import { SuperTest, Test } from "supertest";
+import { getTestApp } from "../bootstrap";
 
-let options: ConnectionOptions = {
-    driver: {
-        type: "sqlite",
-        storage: ":memory:"
-    },
-    entities: [
-        __dirname + "/entity/*.js"
-    ],
-    autoSchemaSync: true
-};
-
-let testApp: supertest.SuperTest<supertest.Test>;
+let app: SuperTest<Test>;
 
 describe("GET /products", () => {
 
     before(done => {
-        createConnectedApp(options).then(app => {
-            testApp = supertest(app);
-            done();
-        });
+        getTestApp().then(a => { app = a; done(); });
     });
 
     it("should return all products", () => {
-
-        testApp.get("/products")
+        app.get("/products")
             .expect(200);
-
     });
 });
-
-
