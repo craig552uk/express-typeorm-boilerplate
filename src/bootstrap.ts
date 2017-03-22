@@ -5,14 +5,14 @@ import * as supertest from "supertest";
 
 let options: ApplicationOptions = {
     database: {
-    driver: {
-        type: "sqlite",
-        storage: ":memory:"
-    },
-    entities: [
-        __dirname + "./entity/*.js"
-    ],
-    autoSchemaSync: true
+        driver: {
+            type: "sqlite",
+            storage: ":memory:"
+        },
+        entities: [
+            __dirname + "/entity/*.js"
+        ],
+        autoSchemaSync: true
     },
     logger: {
         name: "Testing",
