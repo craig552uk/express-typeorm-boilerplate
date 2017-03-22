@@ -43,4 +43,10 @@ export class Products {
         await this.db().remove(item);
         return id;
     }
+
+    public static async deleteAll(): Promise<boolean> {
+        let items = await this.getAll();
+        await this.db().remove(items);
+        return true;
+    }
 }
