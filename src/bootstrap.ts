@@ -3,6 +3,7 @@ import { Application, ApplicationOptions } from "./lib/application";
 import { SuperTest, Test } from "supertest";
 import * as supertest from "supertest";
 
+// Application options for test environment
 let options: ApplicationOptions = {
     database: {
         driver: {

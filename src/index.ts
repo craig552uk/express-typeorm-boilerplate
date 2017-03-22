@@ -1,15 +1,17 @@
 import "reflect-metadata";
+import { argv } from "yargs";
 import { ConnectionOptions } from "typeorm";
 import { Application, ApplicationOptions } from "./lib/application";
 
 let metadata = require("../package.json");
 
-// TODO Get from CLI
-const HOST = "127.0.0.1";
-const PORT = 1337;
+// Get CLI args or defaults
+const HOST = argv.host || "127.0.0.1";
+const PORT = argv.port || 1337;
+const CONFIG = argv.config;
 
-// Database connection options
-// TODO move to configuration loader library
+// Default application options suitable for development environment
+// TODO Override values from JSON file provided on CLI 
 let options: ApplicationOptions = {
     database: {
         driver: {
@@ -30,6 +32,6 @@ let options: ApplicationOptions = {
 
 Application.getApp(options).then(app => {
     app.listen(PORT, HOST, () => {
-        console.log(`Serving on http://${HOST}:${PORT}`);
+        Application.logger.info(`Serving on http://${HOST}:${PORT}`);
     });
 })
