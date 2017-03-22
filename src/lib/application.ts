@@ -1,24 +1,33 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
+import * as typeorm from "typeorm";
+import * as bunyan from "bunyan";
 import { HttpError, NotFound, InternalServerError } from "http-errors";
 import { Express, Request, Response, NextFunction } from "express";
-import { createConnection, ConnectionOptions } from "typeorm";
 import * as routes from "../route";
 
+export interface ApplicationOptions {
+    database: typeorm.ConnectionOptions;
+    logger: bunyan.LoggerOptions;
+}
 
 export class Application {
 
     // Singleton application
     private static _app: Express;
+    public static logger: bunyan;
 
     /**
      * Returns an Express Application with an active database connection
      */
-    public static getApp(options?: ConnectionOptions): Promise<Express> {
+    public static getApp(options: ApplicationOptions): Promise<Express> {
 
         if (this._app) return Promise.resolve(this._app);
 
-        return createConnection(options)
+        // Create logger instance
+        this.logger = bunyan.createLogger(options.logger);
+
+        return typeorm.createConnection(options.database)
             .then(connection => {
 
                 // Express Application
@@ -38,7 +47,7 @@ export class Application {
                 this._app.use((err: any, req: Request, res: Response, next: NextFunction) => {
                     if (!res.headersSent) {
                         if (!(err instanceof HttpError)) {
-                            console.error(err);
+                            this.logger.error(err);
                             err = new InternalServerError();
                         }
                         res.status(err.statusCode);
@@ -49,13 +58,13 @@ export class Application {
 
                 // Logger Middleware
                 this._app.use((req: Request, res: Response) => {
-                    console.log(res.statusCode, req.method, req.url);
+                    this.logger.info(`${res.statusCode} ${req.method} ${req.url}`);
                 });
 
                 return this._app;
             })
             .catch(err => {
-                console.error("TypeORM Failed to Connect", err);
+                this.logger.error(err);
             });
     }
 }

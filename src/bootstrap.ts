@@ -1,10 +1,10 @@
 import "reflect-metadata";
-import { ConnectionOptions } from "typeorm";
-import { Application } from "./lib/application";
+import { Application, ApplicationOptions } from "./lib/application";
 import { SuperTest, Test } from "supertest";
 import * as supertest from "supertest";
 
-let options: ConnectionOptions = {
+let options: ApplicationOptions = {
+    database: {
     driver: {
         type: "sqlite",
         storage: ":memory:"
@@ -13,6 +13,11 @@ let options: ConnectionOptions = {
         __dirname + "./entity/*.js"
     ],
     autoSchemaSync: true
+    },
+    logger: {
+        name: "Testing",
+        level: 99 // Disable logging
+    }
 };
 
 /**

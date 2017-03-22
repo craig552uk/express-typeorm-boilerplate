@@ -1,6 +1,8 @@
 import "reflect-metadata";
 import { ConnectionOptions } from "typeorm";
-import { Application } from "./lib/application";
+import { Application, ApplicationOptions } from "./lib/application";
+
+let metadata = require("../package.json");
 
 // TODO Get from CLI
 const HOST = "127.0.0.1";
@@ -8,15 +10,22 @@ const PORT = 1337;
 
 // Database connection options
 // TODO move to configuration loader library
-let options: ConnectionOptions = {
-    driver: {
-        type: "sqlite",
-        storage: "database.sqlite"
+let options: ApplicationOptions = {
+    database: {
+        driver: {
+            type: "sqlite",
+            storage: "database.sqlite"
+        },
+        entities: [
+            __dirname + "/entity/*.js"
+        ],
+        autoSchemaSync: true
     },
-    entities: [
-        __dirname + "/entity/*.js"
-    ],
-    autoSchemaSync: true
+    logger: {
+        name: metadata.name,
+        version: metadata.version,
+        level: "debug"
+    }
 };
 
 Application.getApp(options).then(app => {
