@@ -19,6 +19,7 @@ export class Application {
 
     /**
      * Returns an Express Application with an active database connection
+     * @param options 
      */
     public static getApp(options: ApplicationOptions): Promise<Express> {
 
