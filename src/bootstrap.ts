@@ -1,7 +1,8 @@
 import "reflect-metadata";
+import * as supertest from "supertest";
+import { join } from "path";
 import { Application, ApplicationOptions } from "./lib/application";
 import { SuperTest, Test } from "supertest";
-import * as supertest from "supertest";
 
 // Application options for test environment
 let options: ApplicationOptions = {
@@ -11,7 +12,7 @@ let options: ApplicationOptions = {
             storage: ":memory:"
         },
         entities: [
-            __dirname + "/entity/*.js"
+            join(__dirname, "entity/*.js")
         ],
         autoSchemaSync: true
     },
