@@ -5,7 +5,7 @@ import { argv } from "yargs";
 import { ConnectionOptions } from "typeorm";
 import { Application, ApplicationOptions } from "./lib/application";
 
-let metadata = require(join("..","package.json"));
+let metadata = require(join("..", "package.json"));
 
 // Default application options suitable for development environment
 let options: ApplicationOptions = {
@@ -15,8 +15,13 @@ let options: ApplicationOptions = {
             storage: "database.sqlite"
         },
         entities: [
-            __dirname + "/entity/*.js"
+            join(__dirname, "entity/*.js")
         ],
+        logging: {
+            logger: (level, message) => Application.logger.debug(message),
+            logQueries: true,
+            logFailedQueryError: true
+        },
         autoSchemaSync: true
     },
     logger: {
