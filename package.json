@@ -4,8 +4,8 @@
   "description": "Boilerplate for Express and TypeORM Projects",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node dist/index.js | bunyan -o short",
-    "test": "tsc && mocha dist/**/**.test.js"
+    "start": "rm -rf dist && tsc && node dist/index.js | bunyan -o short",
+    "test": "rm -rf dist && tsc && mocha dist/**/**.test.js"
   },
   "keywords": [],
   "author": "Craig Russell",
