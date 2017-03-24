@@ -1,6 +1,6 @@
 import { getEntityManager, Repository } from "typeorm";
 import { Product } from "../entity/Product";
-import { NotFound } from "http-errors";
+import { NotFound, BadRequest } from "http-errors";
 
 export class Products {
 
@@ -18,6 +18,15 @@ export class Products {
     }
 
     /**
+     * Validate submitted fields
+     * @param fields 
+     */
+    private static validate(fields: Partial<Product>): boolean {
+        if (!fields.name) throw new BadRequest("Product requires `name`");
+        return true;
+    }
+
+    /**
      * Get all Products
      */
     public static async getAll(): Promise<Product[]> {
@@ -28,8 +37,8 @@ export class Products {
      * Add a new Product
      * @param fields 
      */
-    public static async add(fields: { name: string }): Promise<Product> {
-        // TODO Validation
+    public static async add(fields: Partial<Product>): Promise<Product> {
+        this.validate(fields);
         let item = new Product();
         item.name = fields.name;
         return await this.db().persist(item);
@@ -50,8 +59,8 @@ export class Products {
      * @param id 
      * @param fields 
      */
-    public static async updateById(id: number, fields: { name: string }): Promise<Product> {
-        // TODO Validation
+    public static async updateById(id: number, fields: Partial<Product>): Promise<Product> {
+        this.validate(fields);
         let item = await this.getById(id);
         item.name = fields.name;
         return await this.db().persist(item);

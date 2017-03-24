@@ -46,6 +46,13 @@ describe("Products API", () => {
             Products.deleteAll().then(() => done());
         });
 
+        it("should 400 if `name` not provided", done => {
+            app.post(`/products`)
+                .send({})
+                .expect("Content-Type", /json/)
+                .expect(400, { error: { message: "Product requires `name`" } }, done);
+        });
+
         it("should create and return a new product", done => {
             app.post("/products")
                 .send(fields)
@@ -108,6 +115,13 @@ describe("Products API", () => {
                 .send(fields)
                 .expect("Content-Type", /json/)
                 .expect(404, { error: { message: "Not Found" } }, done);
+        });
+
+        it("should 400 if `name` not provided", done => {
+            app.post(`/products/${product.id}`)
+                .send({})
+                .expect("Content-Type", /json/)
+                .expect(400, { error: { message: "Product requires `name`" } }, done);
         });
 
         it("should update product with `id`", done => {
