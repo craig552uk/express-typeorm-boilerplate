@@ -1,7 +1,7 @@
 import "mocha";
 import { SuperTest, Test } from "supertest";
 import { getTestApp } from "../bootstrap";
-import { Products } from "../controller/Products";
+import { ProductController as Products } from "../controller/ProductController";
 import { Product } from "../entity/Product";
 
 describe("Products API", () => {

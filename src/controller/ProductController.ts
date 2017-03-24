@@ -2,7 +2,7 @@ import { getEntityManager, Repository } from "typeorm";
 import { Product } from "../entity/Product";
 import { NotFound, BadRequest } from "http-errors";
 
-export class Products {
+export class ProductController {
 
     private static _entityManager: Repository<Product>;
 
