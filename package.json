@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "rm -rf dist && tsc && node dist/index.js | bunyan -o short",
-    "test": "rm -rf dist && tsc && mocha dist/**/**.test.js"
+    "test": "rm -rf dist && tsc && mocha dist/**/**.test.js",
+    "build": "rm -rf dist && tsc"
   },
   "keywords": [],
   "author": "Craig Russell",
