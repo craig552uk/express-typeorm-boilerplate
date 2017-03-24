@@ -2,20 +2,30 @@ import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as typeorm from "typeorm";
 import * as bunyan from "bunyan";
+import { join } from "path";
 import { HttpError, NotFound, InternalServerError } from "http-errors";
 import { Express, Request, Response, NextFunction } from "express";
 import * as routes from "../route";
 
 export interface ApplicationOptions {
-    database: typeorm.ConnectionOptions;
-    logger: bunyan.LoggerOptions;
+
+    // Database connection name specified in ormconfig.json
+    connectionName: string;
+
+    // Logger level
+    logLevel: string | number;
 }
 
 export class Application {
 
     // Singleton application
     private static _app: Express;
+
+    // Logger interface
     public static logger: bunyan;
+
+    // DB Connection Name
+    public static connectionName: string;
 
     /**
      * Returns an Express Application with an active database connection
@@ -25,11 +35,21 @@ export class Application {
 
         if (this._app) return Promise.resolve(this._app);
 
-        // Create logger instance
-        this.logger = bunyan.createLogger(options.logger);
+        // Project metadata
+        let metadata = require(join("..", "..", "package.json"));
 
-        return typeorm.createConnection(options.database)
+        // Create logger instance
+        this.logger = bunyan.createLogger({
+            name: metadata.name,
+            version: metadata.version,
+            level: options.logLevel,
+        });
+
+        return typeorm.createConnection(options.connectionName)
             .then(connection => {
+
+                // Expose connection name in Application
+                this.connectionName = options.connectionName;
 
                 // Express Application
                 this._app = express();

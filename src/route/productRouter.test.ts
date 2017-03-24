@@ -9,7 +9,7 @@ describe("Products API", () => {
     let app: SuperTest<Test>;
 
     before(done => {
-        getTestApp().then(a => { app = a; done(); });
+        getTestApp().then(a => { app = a; done(); }).catch(done);
     });
 
 
@@ -20,11 +20,11 @@ describe("Products API", () => {
                 Products.add({ name: "Apples" }),
                 Products.add({ name: "Oranges" }),
                 Products.add({ name: "Pears" }),
-            ]).then(() => done());
+            ]).then(() => done()).catch(done);
         });
 
         after(done => {
-            Products.deleteAll().then(() => done());
+            Products.deleteAll().then(() => done()).catch(done);
         });
 
         it("should return all Products", done => {
@@ -43,7 +43,7 @@ describe("Products API", () => {
         let fields = { name: "Bananas" };
 
         after(done => {
-            Products.deleteAll().then(() => done());
+            Products.deleteAll().then(() => done()).catch(done);
         });
 
         it("should 400 if `name` not provided", done => {
@@ -72,11 +72,13 @@ describe("Products API", () => {
         let product: Product;
 
         before(done => {
-            Products.add({ name: "Grapes" }).then(i => { product = i; done() });
+            Products.add({ name: "Grapes" })
+                .then(i => { product = i; done() })
+                .catch(done);
         });
 
         after(done => {
-            Products.deleteAll().then(() => done());
+            Products.deleteAll().then(() => done()).catch(done);
         });
 
         it("should 404 if no Product exists with `id`", done => {
@@ -103,11 +105,13 @@ describe("Products API", () => {
         let fields = { name: "Mangos" };
 
         before(done => {
-            Products.add({ name: "Strawberries" }).then(i => { product = i; done() });
+            Products.add({ name: "Strawberries" })
+                .then(i => { product = i; done() })
+                .catch(done);
         });
 
         after(done => {
-            Products.deleteAll().then(() => done());
+            Products.deleteAll().then(() => done()).catch(done);
         });
 
         it("should 404 if no Product exists with `id`", done => {
@@ -142,11 +146,13 @@ describe("Products API", () => {
         let product: Product;
 
         before(done => {
-            Products.add({ name: "Strawberries" }).then(i => { product = i; done() });
+            Products.add({ name: "Strawberries" })
+                .then(i => { product = i; done() })
+                .catch(done);
         });
 
         after(done => {
-            Products.deleteAll().then(() => done());
+            Products.deleteAll().then(() => done()).catch(done);
         });
 
         it("should 404 if no Product exists with `id`", done => {

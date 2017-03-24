@@ -7,7 +7,7 @@ let app: SuperTest<Test>;
 describe("Basic API routes", () => {
 
     before(done => {
-        getTestApp().then(a => { app = a; done(); });
+        getTestApp().then(a => { app = a; done(); }).catch(done);
     });
 
     describe("GET /", () => {

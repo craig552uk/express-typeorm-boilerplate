@@ -1,6 +1,7 @@
 import { getEntityManager, Repository } from "typeorm";
-import { Product } from "../entity/Product";
 import { NotFound, BadRequest } from "http-errors";
+import { Application } from "../lib/application";
+import { Product } from "../entity/Product";
 
 export class ProductController {
 
@@ -14,7 +15,8 @@ export class ProductController {
      * Return Repository Manager for Product Entity
      */
     private static db(): Repository<Product> {
-        return this._entityManager || (this._entityManager = getEntityManager().getRepository(Product));
+        let conn = Application.connectionName;
+        return this._entityManager || (this._entityManager = getEntityManager(conn).getRepository(Product));
     }
 
     /**
