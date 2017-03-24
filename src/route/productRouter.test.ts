@@ -48,7 +48,7 @@ describe("Products API", () => {
 
         it("should 400 if `name` not provided", done => {
             app.post(`/products`)
-                .send({})
+                .send({ name: "" })
                 .expect("Content-Type", /json/)
                 .expect(400, { error: { message: "Product requires `name`" } }, done);
         });
@@ -119,7 +119,7 @@ describe("Products API", () => {
 
         it("should 400 if `name` not provided", done => {
             app.post(`/products/${product.id}`)
-                .send({})
+                .send({ name: "" })
                 .expect("Content-Type", /json/)
                 .expect(400, { error: { message: "Product requires `name`" } }, done);
         });
