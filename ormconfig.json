@@ -9,6 +9,9 @@
             "logQueries": true,
             "logFailedQueryError": true
         },
+        "migrations": [
+            "dist/migration/*.js"
+        ],
         "entities": [
             "dist/entity/*.js"
         ],
@@ -20,6 +23,9 @@
             "type": "sqlite",
             "storage": ":memory:"
         },
+        "migrations": [
+            "dist/migration/*.js"
+        ],
         "entities": [
             "dist/entity/*.js"
         ],
@@ -39,6 +45,9 @@
             "logQueries": true,
             "logFailedQueryError": true
         },
+        "migrations": [
+            "dist/migration/*.js"
+        ],
         "entities": [
             "dist/entity/*.js"
         ]

@@ -6,7 +6,9 @@
   "scripts": {
     "start": "rm -rf dist && tsc && node dist/index.js | bunyan -o short",
     "test": "rm -rf dist && tsc && mocha dist/**/**.test.js",
-    "build": "rm -rf dist && tsc"
+    "build": "rm -rf dist && tsc",
+    "migrations:run": "tsc && typeorm migrations:run",
+    "migrations:create": "typeorm migrations:create -d src/migration"
   },
   "keywords": [],
   "author": "Craig Russell",
