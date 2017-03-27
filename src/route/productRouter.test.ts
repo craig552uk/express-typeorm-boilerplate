@@ -30,8 +30,8 @@ describe("Products API", () => {
         it("should return all Products", done => {
             app.get("/products")
                 .expect(res => {
-                    if (!res.body.data) throw new Error("Expected data in response");
-                    if (res.body.data.length != 3) throw new Error("Expected 3 Products in response");
+                    if (!res.body.data) throw new Error("API: Expected data in response");
+                    if (res.body.data.length != 3) throw new Error("API: Expected 3 Products in response");
                 })
                 .expect("Content-Type", /json/)
                 .expect(200, done);
@@ -56,14 +56,21 @@ describe("Products API", () => {
         it("should create and return a new product", done => {
             app.post("/products")
                 .send(fields)
-                .expect(res => {
-                    if (!res.body.data) throw new Error("Expected data in response");
-                    if (!res.body.data.id) throw new Error("Expected Product to have id");
-                    if (!res.body.data.name) throw new Error("Expected Product to have name");
-                    if (res.body.data.name !== fields.name) throw new Error(`Expected Product name to be '${fields.name}'`);
-                })
+                .expect(200)
                 .expect("Content-Type", /json/)
-                .expect(200, done);
+                .expect(res => {
+                    // Test API response
+                    if (!res.body.data) throw new Error("API: Expected data in response");
+                    if (!res.body.data.id) throw new Error("API: Expected Product to have id");
+                    if (!res.body.data.name) throw new Error("API: Expected Product to have name");
+                    if (res.body.data.name !== fields.name) throw new Error(`API: Expected Product name to be '${fields.name}'`);
+                })
+                .then(async res => {
+                    // Test DB record
+                    let product_1 = await Products.getById(res.body.data.id);
+                    if (!product_1) throw new Error("DB: Expected record to exist in DB");
+                    if (product_1.name !== fields.name) throw new Error(`DB: Expected Product name to be '${fields.name}'`);
+                }).then(done, done);
         });
     });
 
@@ -131,13 +138,21 @@ describe("Products API", () => {
         it("should update product with `id`", done => {
             app.post(`/products/${product.id}`)
                 .send(fields)
+                .expect(200)
                 .expect("Content-Type", /json/)
-                .expect(200, {
-                    data: {
-                        id: product.id,
-                        name: fields.name
-                    }
-                }, done);
+                .expect(res => {
+                    // Test API response
+                    if (!res.body.data) throw new Error("API: Expected data in response");
+                    if (!res.body.data.id) throw new Error("API: Expected Product to have id");
+                    if (!res.body.data.name) throw new Error("API: Expected Product to have name");
+                    if (res.body.data.name !== fields.name) throw new Error(`API: Expected Product name to be '${fields.name}'`);
+                })
+                .then(async res => {
+                    // Test DB record
+                    let product_1 = await Products.getById(res.body.data.id);
+                    if (!product_1) throw new Error("DB: Expected record to exist in DB");
+                    if (product_1.name !== fields.name) throw new Error(`DB: Expected Product name to be '${fields.name}'`);
+                }).then(done, done);
         });
     });
 
@@ -164,7 +179,12 @@ describe("Products API", () => {
         it("should delete product with `id`", done => {
             app.delete(`/products/${product.id}`)
                 .expect("Content-Type", /json/)
-                .expect(200, { data: product.id }, done);
+                .expect(200, { data: product.id })
+                .then(res => {
+                    return Products.getById(product.id)
+                        .then(x => { throw new Error("DB: Expected record not to exist in DB") })
+                        .catch(e => null);
+                }).then(done, done);
         });
     });
 });
