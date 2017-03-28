@@ -50,9 +50,8 @@ export class Application {
         if(!ormConfig) throw new Error(`No ORM configuration found for connection named '${options.connectionName}'`);
 
         // Assign DB logger
-        ormConfig.logging = Object.assign(ormConfig.logging, {
-            logger: (level, msg) => this.logger.debug(msg)
-        })
+        ormConfig.logging = ormConfig.logging || {};
+        ormConfig.logging.logger = (level, msg) => this.logger.debug(msg);
 
         // Create DB Connection
         return typeorm.createConnection(ormConfig)
@@ -60,6 +59,8 @@ export class Application {
 
                 // Expose connection name in Application
                 this.connectionName = options.connectionName;
+
+                console.log(this.connectionName)
 
                 // Express Application
                 this._app = express();
