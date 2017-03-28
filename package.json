@@ -4,8 +4,8 @@
   "description": "Boilerplate for Express and TypeORM Projects",
   "main": "index.js",
   "scripts": {
-    "start": "rm -rf dist && tsc && node dist/index.js | bunyan -o short",
-    "test": "rm -rf dist && tsc && mocha dist/**/**.test.js",
+    "start": "node dist/index.js | bunyan -o short",
+    "test": "mocha dist/**/**.test.js",
     "build": "rm -rf dist && tsc",
     "watch": "rm -rf dist && tsc --watch",
     "migrations:run": "tsc && typeorm migrations:run",
