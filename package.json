@@ -7,6 +7,7 @@
     "start": "rm -rf dist && tsc && node dist/index.js | bunyan -o short",
     "test": "rm -rf dist && tsc && mocha dist/**/**.test.js",
     "build": "rm -rf dist && tsc",
+    "watch": "rm -rf dist && tsc --watch",
     "migrations:run": "tsc && typeorm migrations:run",
     "migrations:create": "typeorm migrations:create -d src/migration"
   },
