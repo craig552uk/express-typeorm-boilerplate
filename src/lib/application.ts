@@ -45,7 +45,17 @@ export class Application {
             level: options.logLevel,
         });
 
-        return typeorm.createConnection(options.connectionName)
+        // Load TypeORM config for connection
+        const ormConfig = require(join("..", "..", "ormconfig.json")).find(con => con.name === options.connectionName);
+        if(!ormConfig) throw new Error(`No ORM configuration found for connection named '${options.connectionName}'`);
+
+        // Assign DB logger
+        ormConfig.logging = Object.assign(ormConfig.logging, {
+            logger: (level, msg) => this.logger.debug(msg)
+        })
+
+        // Create DB Connection
+        return typeorm.createConnection(ormConfig)
             .then(connection => {
 
                 // Expose connection name in Application
