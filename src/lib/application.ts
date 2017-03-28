@@ -60,8 +60,6 @@ export class Application {
                 // Expose connection name in Application
                 this.connectionName = options.connectionName;
 
-                console.log(this.connectionName)
-
                 // Express Application
                 this._app = express();
                 this._app.use(bodyParser.json());
